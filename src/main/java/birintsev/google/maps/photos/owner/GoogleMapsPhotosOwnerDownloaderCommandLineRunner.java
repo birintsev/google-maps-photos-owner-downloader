@@ -6,7 +6,7 @@ import birintsev.google.maps.photos.owner.services.GooglePhotoDownloadSaver;
 import birintsev.google.maps.photos.owner.services.GooglePlacesApiService;
 import birintsev.google.maps.photos.owner.services.IsByOwnerPhotoPredicate;
 import com.google.maps.model.Photo;
-import com.google.maps.model.PlacesSearchResult;
+import com.google.maps.model.PlaceDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -36,34 +36,33 @@ public class GoogleMapsPhotosOwnerDownloaderCommandLineRunner implements Command
     }
 
     public void downloadAndSavePhotos() {
-        googlePlacesApiService.textSearchQueryAll(googlePlacesQuery)
-            .stream()
+        googlePlacesApiService.textSearchQueryAllAsPlaceDetails(googlePlacesQuery)
+            .parallelStream()
             .flatMap(this::splitIntoDownloadsDtoStream)
             .filter(this::isByOwnerPhoto)
             .forEach(googlePhotoDownloadSaver::save);
     }
 
     private boolean isByOwnerPhoto(GooglePhotoDownload googlePhotoDownload) {
-        return isByOwnerPhoto(googlePhotoDownload.getPlacesSearchResult(), googlePhotoDownload.getPhoto());
+        return isByOwnerPhoto(googlePhotoDownload.getPlaceDetails(), googlePhotoDownload.getPhoto());
     }
 
-    private boolean isByOwnerPhoto(PlacesSearchResult placesSearchResult, Photo photo) {
-        return isByOwnerPhotoPredicate.isByOwnerPhoto(placesSearchResult, photo);
+    private boolean isByOwnerPhoto(PlaceDetails placeDetails, Photo photo) {
+        return isByOwnerPhotoPredicate.isByOwnerPhoto(placeDetails, photo);
     }
 
-    private List<GooglePhotoDownload> splitIntoDownloadsDto(PlacesSearchResult placesSearchResult) {
-        return Arrays.stream(placesSearchResult.photos)
+    private List<GooglePhotoDownload> splitIntoDownloadsDto(PlaceDetails placeDetails) {
+        return Arrays.stream(placeDetails.photos)
             .map(photo -> {
                 GooglePhotoDownload processingDto = new GooglePhotoDownload();
-                processingDto.setPlacesSearchResult(placesSearchResult);
+                processingDto.setPlaceDetails(placeDetails);
                 processingDto.setPhoto(photo);
                 processingDto.setImageResult(googlePlacesApiService.downloadPhoto(photo));
                 return processingDto;
-            })
-            .toList();
+            }).toList();
     }
 
-    private Stream<GooglePhotoDownload> splitIntoDownloadsDtoStream(PlacesSearchResult placesSearchResult) {
-        return splitIntoDownloadsDto(placesSearchResult).stream();
+    private Stream<GooglePhotoDownload> splitIntoDownloadsDtoStream(PlaceDetails placeDetails) {
+        return splitIntoDownloadsDto(placeDetails).stream();
     }
 }

@@ -2,6 +2,7 @@ package birintsev.google.maps.photos.owner.annotations;
 
 import birintsev.google.maps.photos.owner.validators.OutputDirectoryValidator;
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.annotation.*;
@@ -13,4 +14,9 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = OutputDirectoryValidator.class)
 public @interface OutputDirectory {
 
+    String message() default "";
+
+    Class<?>[] groups() default { };
+
+    Class<? extends Payload>[] payload() default { };
 }

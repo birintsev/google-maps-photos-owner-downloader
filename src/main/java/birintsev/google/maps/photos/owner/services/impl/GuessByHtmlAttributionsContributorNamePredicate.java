@@ -2,7 +2,7 @@ package birintsev.google.maps.photos.owner.services.impl;
 
 import birintsev.google.maps.photos.owner.services.IsByOwnerPhotoPredicate;
 import com.google.maps.model.Photo;
-import com.google.maps.model.PlacesSearchResult;
+import com.google.maps.model.PlaceDetails;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -15,8 +15,8 @@ import static birintsev.google.maps.photos.owner.utils.CommonUtils.containsAny;
 public class GuessByHtmlAttributionsContributorNamePredicate implements IsByOwnerPhotoPredicate {
 
     @Override
-    public boolean isByOwnerPhoto(PlacesSearchResult placesSearchResult, Photo photo) {
-        String placeName = placesSearchResult.name;
+    public boolean isByOwnerPhoto(PlaceDetails placeDetails, Photo photo) {
+        String placeName = placeDetails.name;
         String photoContributorName = extractPhotoContributorName(photo);
         return placeName != null && placeName.equals(photoContributorName);
     }
