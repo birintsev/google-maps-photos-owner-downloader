@@ -7,6 +7,7 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.ImageResult;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.Photo;
+import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.PlacesSearchResult;
 import jakarta.annotation.PostConstruct;
@@ -55,6 +56,13 @@ public class GooglePlacesApiServiceImpl implements GooglePlacesApiService {
         }
 
         return searchResults;
+    }
+
+    @Override
+    public List<PlaceDetails> textSearchQueryAllAsPlaceDetails(String query) {
+        return textSearchQueryAll(query).stream()
+            .map(placesSearchResult -> tryAwait(PlacesApi.placeDetails(geoApiContext, placesSearchResult.placeId)))
+            .toList();
     }
 
     @Override
