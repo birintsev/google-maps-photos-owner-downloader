@@ -42,7 +42,7 @@ public class GooglePhotoDownloadSaverImpl implements GooglePhotoDownloadSaver {
 
     private Path getPhotoPath(GooglePhotoDownload googlePhotoDownload) {
         return outputDirectory
-            .resolve(escape(googlePhotoDownload.getPlacesSearchResult().formattedAddress))
+            .resolve(escape(googlePhotoDownload.getPlaceDetails().formattedAddress))
             .resolve(escape(googlePhotoDownload.getPhoto().photoReference));
     }
 

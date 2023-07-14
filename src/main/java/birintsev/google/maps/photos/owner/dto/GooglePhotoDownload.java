@@ -2,7 +2,7 @@ package birintsev.google.maps.photos.owner.dto;
 
 import com.google.maps.ImageResult;
 import com.google.maps.model.Photo;
-import com.google.maps.model.PlacesSearchResult;
+import com.google.maps.model.PlaceDetails;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 public class GooglePhotoDownload {
 
-    private PlacesSearchResult placesSearchResult;
+    private PlaceDetails placeDetails;
 
     private ImageResult imageResult;
 
