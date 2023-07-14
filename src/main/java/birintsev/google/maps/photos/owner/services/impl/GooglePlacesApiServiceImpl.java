@@ -59,7 +59,12 @@ public class GooglePlacesApiServiceImpl implements GooglePlacesApiService {
 
     @Override
     public ImageResult downloadPhoto(Photo photo) {
-        return tryAwait(PlacesApi.photo(geoApiContext, photo.photoReference));
+        return tryAwait(
+            PlacesApi
+                .photo(geoApiContext, photo.photoReference)
+                .maxHeight(Integer.MAX_VALUE)
+                .maxWidth(Integer.MAX_VALUE)
+        );
     }
 
     @PostConstruct
